@@ -1,0 +1,9 @@
+{
+  "urls": [
+    "https://www.yahoo.co.jp",
+    "https://www.google.com",
+    "https://twitter.com"
+  ],
+  "concurrency": 20,
+  "timeout": 60
+}
