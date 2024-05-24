@@ -19,19 +19,27 @@ sam build && sam local invoke Synthetics --event sample.json
 ## Lambdaにデプロイする
 
 ```
-aws ecr get-login-password  | docker login --username AWS --password-stdin <AWSアカウントID>.dkr.ecr.ap-northeast-1.amazonaws.com
-docker tag helloworldfunction:python3.8-v1 <AWSアカウントID>.dkr.ecr.ap-northeast-1.amazonaws.com/helloworldfunction:python3.8-v1
-docker push <AWSアカウントID>.dkr.ecr.ap-northeast-1.amazonaws.com/helloworldfunction:python3.8-v1
-
 sam build
+
+# 初回のみ
 sam deploy --guided
+
+# ２回目以降
+sam deploy
 ```
 
+--guidedオプションを付けると設定ファイルが作成される。
+２回目以降は設定ファイルの項目に従って実行される
 
-## lambdaをローカルから実行する
+
+## lambdaを実行する
+初回デプロイ時に指定したstack-nameを指定
+```
+sam remote invoke --stack-name Synthetics --event-file sample.json
+```
+
+## リソース全削除
 
 ```
-sam invoke --payload fileb://payload.json
+sam delete
 ```
-
-

@@ -62,7 +62,7 @@ def put_metrics_to_cloudwatch(responses):
     for url, status_code, duration in responses:
         try:
             response = cloudwatch.put_metric_data(
-                Namespace='URLMonitoring',
+                Namespace='Synthetics',
                 MetricData=[
                     {
                         'MetricName': 'ResponseTime',
@@ -91,12 +91,11 @@ def put_metrics_to_cloudwatch(responses):
                                 'Value': region
                             }
                         ],
-                        'Value': int(status_code) if status_code.isdigit() else 0,
+                        'Value': status_code,
                         'Unit': 'Count'
                     }
                 ]
             )
-            return response
         except (NoCredentialsError, PartialCredentialsError):
             logger.error("AWS credentials not found.")
         except Exception as e:
