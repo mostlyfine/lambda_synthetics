@@ -15,8 +15,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: lambda_function.lambda_handler
-      # CodeUri: docker://synthetic
-      Runtime: python3.9
+      PackageType: Image
       Timeout: 10 # Optional: Adjust timeout as needed
     Metadata:
       Dockerfile: Dockerfile

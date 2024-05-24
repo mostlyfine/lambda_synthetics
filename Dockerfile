@@ -1,18 +1,7 @@
-FROM python:3.8-slim
+FROM public.ecr.aws/lambda/python:3.12
 
-# Lambdaライブラリを追加
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# 必要な依存関係をインストール
-COPY requirements.txt .
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Lambda関数のコードをコピー
-COPY lambda_function.py .
-
-# Lambdaエントリポイント
+COPY lambda_function.py ${LAMBDA_TASK_ROOT}
 CMD ["lambda_function.lambda_handler"]
-
