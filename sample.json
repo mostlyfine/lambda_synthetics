@@ -2,9 +2,9 @@
   "urls": [
     "https://www.yahoo.co.jp",
     "https://www.google.com",
-    "https://twitter.com"
+    "https://x.com"
   ],
-  "concurrency": 20,
-  "timeout": 60,
-  "cloudwatch": true
+  "headers": {
+    "User-Agent": "lambda_function/v1.0"
+  }
 }

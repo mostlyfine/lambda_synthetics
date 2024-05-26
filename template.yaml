@@ -14,8 +14,9 @@ Resources:
   Synthetics:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: Synthetics
       PackageType: Image
-      Timeout: 10 # Optional: Adjust timeout as needed
+      Timeout: 30 # Optional: Adjust lambda timeout as needed
       Policies:
         - Statement:
           - Sid: CloudwatchPutMetricPolicy
@@ -23,12 +24,26 @@ Resources:
             Action:
               - cloudwatch:PutMetricData
             Resource: '*'
+      Environment:
+        Variables:
+          CONCURRENCY: '20'
+          TIMEOUT: '10'
+          CLOUDWATCH: '1'
       Events:
           Synthetics:
               Type: ScheduleV2
               Properties:
-                  ScheduleExpression: 'rate(5 minute)'
-                  Input: '{"urls":["https://www.yahoo.co.jp","https://www.google.com","https://twitter.com"],"concurrency":20,"timeout":60,"cloudwatch":true}'
+                  Name: lambda-schedumed-synthetics
+                  ScheduleExpression: 'cron(0/5 * * * ? *)'
+                  ScheduleExpressionTimezone: "Asia/Tokyo"
+                  Input: |
+                    {
+                      "urls": [
+                        "https://www.yahoo.co.jp",
+                        "https://www.google.com",
+                        "https://x.com"
+                      ]
+                    }
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: .

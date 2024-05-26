@@ -106,19 +106,22 @@ def put_metrics_to_cloudwatch(responses):
 def lambda_handler(event, context):
     logger.info(event)
     urls = event.get('urls', [])
-    timeout = event.get('timeout', 10)
-    concurrency = event.get('concurrency', 10)
     headers = event.get('headers', {})
-    pushgateway_url = event.get('pushgateway_url', '')
-    put_cw = event.get('cloudwatch', False)
 
+    timeout = int(os.getenv('TIMEOUT', '10'))
+    concurrency = int(os.getenv('CONCURRENCY', '10'))
+
+    # Fetch
     loop = asyncio.get_event_loop()
     responses = loop.run_until_complete(main(urls, timeout, concurrency, headers))
 
+    # PushGateway
+    pushgateway_url = os.getenv('PUSHGATEWAY_URL', '')
     if pushgateway_url:
         push_metrics_to_gateway(pushgateway_url, responses)
 
-    if put_cw:
+    # Cloudwatch Metrics
+    if bool(int(os.getenv('CLOUDWATCH', '0'))):
         put_metrics_to_cloudwatch(responses)
 
     logger.info(responses)
