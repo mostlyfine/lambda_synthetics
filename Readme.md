@@ -13,7 +13,17 @@ pip install aws-sam-cli
 ## ローカル環境でテスト実行する
 
 ```
-sam build && sam local invoke Synthetics --event sample.json
+sam build && sam local invoke Synthetics --event sample.json --env-vars env.json
+```
+
+ローカルで上書きしたい環境変数
+env.json
+```json
+{
+  "Synthetics": {
+    "CLOUDWATCH": "0"
+  }
+}
 ```
 
 ## Lambdaにデプロイする
