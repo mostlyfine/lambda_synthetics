@@ -21,7 +21,7 @@ sam build && sam local invoke Synthetics --event sample.json
 ```
 sam build
 
-# 初回のみ
+# 初回のみ(ECR作成なども)
 sam deploy --guided
 
 # ２回目以降

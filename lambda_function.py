@@ -27,11 +27,11 @@ async def fetch(session, url, timeout, headers):
 
 
 async def on_request_start(session, trace_config_ctx, params):
-    logger.info(f'Start request: {params.url.host}:{params.url.port}')
+    logger.debug(f'Start request: {params.url.host}:{params.url.port}')
 
 
 async def on_request_end(session, trace_config_ctx, params):
-    logger.info(f'End request: {params.url.host}:{params.url.port} "{params.method} {params.url.path} {params.response.status}"')
+    logger.debug(f'End request: {params.url.host}:{params.url.port} "{params.method} {params.url.path} {params.response.status}"')
 
 
 async def main(urls, timeout, concurrency, headers):
@@ -51,8 +51,8 @@ def push_metrics_to_gateway(pushgateway_url, responses):
     for url, status_code, duration in responses:
         response_time_gauge = Gauge('url_response_time_seconds', 'Response time for URL', ['url'], registry=registry)
         status_code_gauge = Gauge('url_status_code', 'Status code for URL', ['url'], registry=registry)
-        response_time_gauge.labels(url=url,region=region).set(duration)
-        status_code_gauge.labels(url=url,region=region).set(int(status_code) if isinstance(status_code, int) else 0)
+        response_time_gauge.labels(url=url, region=region).set(duration)
+        status_code_gauge.labels(url=url, region=region).set(int(status_code) if isinstance(status_code, int) else 0)
     push_to_gateway(pushgateway_url, job='url_monitoring', registry=registry)
 
 
@@ -96,6 +96,7 @@ def put_metrics_to_cloudwatch(responses):
                     }
                 ]
             )
+            logger.debug(response)
         except (NoCredentialsError, PartialCredentialsError):
             logger.error("AWS credentials not found.")
         except Exception as e:
